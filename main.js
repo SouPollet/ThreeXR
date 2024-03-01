@@ -5,6 +5,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { EXRLoader } from "three/addons/loaders/EXRLoader.js";
 //XR
 import {VRButton} from 'three/addons/webxr/VRButton.js';
+import {ARButton} from 'three/addons/webxr/ARButton.js';
 import {XRControllerModelFactory} from 'three/addons/webxr/XRControllerModelFactory.js';
 import {XRHandModelFactory} from 'three/addons/webxr/XRHandModelFactory.js';
 
@@ -33,7 +34,7 @@ function init(){
 canvas = document.querySelector("#app");
 scene = new THREE.Scene();
 
-renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer = new THREE.WebGLRenderer({ antialias: true,alpha:true });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
@@ -45,7 +46,10 @@ camera = new THREE.PerspectiveCamera(50,window.innerWidth / window.innerHeight,
 
 // XR
 renderer.xr.enabled = true;
-document.body.appendChild(VRButton.createButton(renderer));
+renderer.setClearColor(0x000000);
+//renderer.setClearAlpha(0x000000);
+document.body.appendChild(ARButton.createButton(renderer));
+//document.body.appendChild(VRButton.createButton(renderer));
 
 //#region XR
 
@@ -98,7 +102,7 @@ characterGroup.add(hand1);
 characterGroup.add(hand2);
 characterGroup.add(controllerGrip1);
 characterGroup.add(controllerGrip2);
-//characterGroup.add(camera);
+characterGroup.add(camera);
 
 characterGroup.position.z = posCameraZ; //Déplacer cam pour voir les modeles
 scene.add(characterGroup);
@@ -170,7 +174,7 @@ let bronzeMaterial = reflectiveSilver.clone();
   bronzeMaterial.color.set('#ff9051'); // couleur du material
 
 
-torusMesh = new THREE.Mesh(knot, reflectiveSilver);
+torusMesh = new THREE.Mesh(knot, reflectiveGold);
 let cubeMesh = new THREE.Mesh(cube,reflectiveSilver);
 let sphereMesh = new THREE.Mesh(sphere,reflectiveGold);
 let planeMesh = new THREE.Mesh(plane,reflectiveSilver);
