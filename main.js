@@ -94,7 +94,10 @@ characterGroup.add(hand1);
 characterGroup.add(hand2);
 characterGroup.add(controllerGrip1);
 characterGroup.add(controllerGrip2);
-camera.position.z = 5;
+console.log(camera.position.z);
+camera.position.z = 15;
+
+console.log(camera.position.z);
 //characterGroup.position.z = 5 //Déplacer cam pour voir les modeles
 //characterGroup.add(camera);
 
