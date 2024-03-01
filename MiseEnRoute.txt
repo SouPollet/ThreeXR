@@ -1,0 +1,56 @@
+Configuration de base d'un projet three js
+
+
+-----
+CREER LES FICHIERS DE BASE : 
+- Fichier index.html
+- Fichier main.js
+- Créer un répertoire public ou static qui contiendra les assets (3D, sons, images, etc...)
+
+-----
+CONFIGURER THREE JS : 
+- Installer Node.JS -> ici version 10.2.4
+- Dans le terminal, faire : 
+
+# vite
+npm create vite@latest
+
+Cd dossier
+npm i three
+
+Ce qui permet d'installer vite et three js 
+
+-----
+POUR TESTER : 
+Lancer la commande : 
+
+npx vite 
+
+Qui ouvre un localhost sur le port 5173
+
+-----
+CREER UNE SCENE DE BASE : 
+- Pour afficher le moindre élément, il faut au moins 3 choses : 
+- La scène -> Tout le contenu qui peut être exploité dans l'environnement 3D
+- Le renderer -> L'interface entre les éléments de la scène et la caméra
+- La caméra -> Qui affiche ce qui est projeté dans l'espace 3D
+
+Dans main.js, ça ressemble à ça : 
+
+import * as THREE from 'three';
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+-On ajoute ensuite des éléments en 3D, comme un cube : 
+
+const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const cube = new THREE.Mesh( geometry, material );
+scene.add( cube );
+
+camera.position.z = 5;
