@@ -17,9 +17,11 @@ let torusMesh, socleMesh;
 let exrCubeRenderTarget, exrBackground;
 
 //XR
-let hand1, hand2, characterGroup;
+let hand1, hand2, characterGroup, headCharacter;
 let controller1, controller2;
 let controllerGrip1, controllerGrip2;
+
+let posCameraZ = 10; 
 
 //#endregion
 
@@ -31,14 +33,14 @@ function init(){
 canvas = document.querySelector("#app");
 scene = new THREE.Scene();
 
-renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
+renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
+//renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
 camera = new THREE.PerspectiveCamera(50,window.innerWidth / window.innerHeight,
-  0.1, 1000,
+  0.1, 160000,
 ); 
 
 // XR
@@ -48,10 +50,10 @@ document.body.appendChild(VRButton.createButton(renderer));
 //#region XR
 
 controller1 = renderer.xr.getController(0); //Main Gauche
-scene.add(controller1);
+//scene.add(controller1);
 
 controller2 = renderer.xr.getController(1); //Main Droite
-scene.add(controller2);
+//scene.add(controller2);
 
 const controllerModelFactory = new XRControllerModelFactory();
 const handModelFactory = new XRHandModelFactory();
@@ -82,24 +84,30 @@ const line = new THREE.Line(geometry);
 line.name = 'line';
 line.scale.z = 5;
 
+hand1.name = "main gauche";
+
 controller1.add(line.clone());
 controller2.add(line.clone());
 //-------------
 
 // XR-Groupe personnage a placer
-let characterGroup = new THREE.Group();
+characterGroup = new THREE.Group();
 characterGroup.add(controller1);
 characterGroup.add(controller2);
 characterGroup.add(hand1);
 characterGroup.add(hand2);
 characterGroup.add(controllerGrip1);
 characterGroup.add(controllerGrip2);
-console.log(camera.position.z);
-camera.position.z = 15;
+//characterGroup.add(camera);
+
+characterGroup.position.z = posCameraZ; //Déplacer cam pour voir les modeles
+scene.add(characterGroup);
 
 console.log(camera.position.z);
-//characterGroup.position.z = 5 //Déplacer cam pour voir les modeles
-//characterGroup.add(camera);
+//camera.position.z = posCameraZ;
+console.log(camera.position.z);
+
+
 
 //#endregion
 
@@ -107,7 +115,6 @@ console.log(camera.position.z);
 
 document.body.appendChild(renderer.domElement);
 
-window.addEventListener("resize", onWindowResize);
 
 function onWindowResize() {
   const width = window.innerWidth;
@@ -119,12 +126,17 @@ function onWindowResize() {
   renderer.setSize(width, height);
 }
 
+onWindowResize();
+window.addEventListener("resize", onWindowResize);
+
 //Ajout des controles
+/*
 controls = new OrbitControls(camera, renderer.domElement);
 controls.minDistance = 20;
 controls.maxDistance = 200;
 controls.enableDamping = true;
 controls.dampingFactor = 0.1;
+*/
 
 //#endregion
 
@@ -168,6 +180,7 @@ cubeMesh.position.x = 15;
 sphereMesh.position.x = 30;
 planeMesh.position.x = -15;
 tetrahedronMesh.position.x = -30;
+torusMesh.position.z = -30;
 
 scene.add(torusMesh);
 scene.add(cubeMesh);
@@ -175,6 +188,12 @@ scene.add(sphereMesh);
 scene.add(planeMesh);
 scene.add(tetrahedronMesh);
 
+let sphere1 = new THREE.SphereGeometry(3,4,2)
+headCharacter = new THREE.Mesh(sphere1,reflectiveGold);
+headCharacter.name = "head";
+scene.add(headCharacter);
+characterGroup.add(headCharacter);
+headCharacter.position.set(characterGroup.position.x, characterGroup.position.y, characterGroup.position.z);
 //#endregion
 
 //#region LUMIERES
@@ -208,13 +227,27 @@ canvas.parentElement.appendChild(stats.dom);
 }
 
 function animate() {
-  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+  renderer.setAnimationLoop(animate);
+
+  
+  //requestAnimationFrame(animate);
   stats.begin();
+  camera.updateMatrixWorld();
+  //controls.update();
 
   //#region TESTS
   //Pour animer le torus
   torusMesh.rotation.x += 0.01;
   torusMesh.rotation.y += 0.03;
+
+  /*
+  console.log("Head x : "+headCharacter.position.x + " y : "+headCharacter.position.y + " z : "+ headCharacter.position.z);
+  console.log("XR_Chara x : "+characterGroup.position.x + " y : "+characterGroup.position.y + " z : "+ characterGroup.position.z);
+  */
+  console.log("Camera x : "+camera.position.x + " y : "+camera.position.y + " z : "+ camera.position.z);
+    
+
   //#endregion
 
   let newEnvMap = torusMesh.material.envMap;
@@ -229,7 +262,6 @@ function animate() {
   }
 
   scene.environment = background;
-  renderer.render(scene, camera);
   stats.end();
 
 }
