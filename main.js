@@ -22,7 +22,7 @@ let hand1, hand2, characterGroup, headCharacter;
 let controller1, controller2;
 let controllerGrip1, controllerGrip2;
 
-let posCameraZ = 10; 
+let posCameraZ = 10;
 
 //#endregion
 
@@ -42,7 +42,7 @@ renderer.shadowMap.enabled = true;
 
 camera = new THREE.PerspectiveCamera(50,window.innerWidth / window.innerHeight,
   0.1, 160000,
-); 
+);
 
 // XR
 renderer.xr.enabled = true;
@@ -115,7 +115,7 @@ console.log(camera.position.z);
 
 //#endregion
 
-//#endregion  
+//#endregion
 
 document.body.appendChild(renderer.domElement);
 
@@ -167,7 +167,7 @@ let knot = new THREE.TorusKnotGeometry(5, 2, 128, 24); //knot -> radius, tubeSiz
 let cube = new THREE.BoxGeometry(10,10,10);            //cube -> width, height, depth, nb subd w, nb subd h, nb subd d
 let sphere = new THREE.SphereGeometry(5,64,64);        //sphere -> radius, nb subd x, nb subd y, posLigneCoupeX = 0, pacmanEffect, posLigneCoupeY=0, print3DEffect
 let plane = new THREE.PlaneGeometry(10,10,10);         //plane -> width, height, nb subd x, nb subd y
-let tetrahedron = new THREE.TetrahedronGeometry(5);   //thetahedron -> 
+let tetrahedron = new THREE.TetrahedronGeometry(5);   //thetahedron ->
 
 //Create a new material for code for gold
 let bronzeMaterial = reflectiveSilver.clone();
@@ -234,7 +234,7 @@ function animate() {
   renderer.render(scene, camera);
   renderer.setAnimationLoop(animate);
 
-  
+
   //requestAnimationFrame(animate);
   stats.begin();
   camera.updateMatrixWorld();
@@ -250,7 +250,7 @@ function animate() {
   console.log("XR_Chara x : "+characterGroup.position.x + " y : "+characterGroup.position.y + " z : "+ characterGroup.position.z);
   */
   console.log("Camera x : "+camera.position.x + " y : "+camera.position.y + " z : "+ camera.position.z);
-    
+
 
   //#endregion
 
